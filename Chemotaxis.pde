@@ -1,7 +1,10 @@
 //declared variables to use globally
 int randomized;
-Bacteria [] colony;   
-void setup()   
+Bacteria [] colony;
+int foodX = 200;
+int foodY = 200;   
+boolean poison = false;
+void setup()
 {     
 	//intialized bacteria array
 	 size(400,400);
@@ -14,12 +17,24 @@ void draw()
 {    
 	//redraw background
 	background(0);
+	if (keyPressed) {
+		if (key == 'p' || key == 'P') {
+			poison = true;
+		} else {
+			poison = false;
+		}
+	}
 	//give each bacteria the random walk direction and show them
 	for (int i = 0; i<colony.length; i++) {
 		colony[i].roll();
 		colony[i].show();
 	}
 }  
+void mousePressed()
+{
+	foodX = mouseX;
+	foodY = mouseY;
+} 
 class Bacteria    
 {     
 	//declared the bacteria variables
@@ -36,7 +51,7 @@ class Bacteria
 	void roll() 
 	{
 		//randomize number to determine the walk direction
-		randomized = (int)(Math.random()*6);
+		randomized = (int)(Math.random()*10);
 	}
 	void show()
 	{
@@ -46,27 +61,37 @@ class Bacteria
 		stroke(255);
 		//draw the circle representing each bacteria
 		ellipse(myX, myY, 10, 10);
+		fill(255);
+		rect(foodX-5,foodY-5,10,10);
 		//this giant nested if statement determines direction
-		//if the determiner is 0,1,2 or 3 then the bacteria moves in the corresponding direction
-		//if 4 or 5 then the bacteria movement depends on the mouse placement
-		if (randomized == 0) {
+		//if the determiner is 0,1,2,3,6,7,8 or 9 then the bacteria moves in the corresponding direction
+		//if 4 or 5 then the bacteria movement depends on the mouse placement and poison status
+		if ((randomized == 0 || randomized == 6) && myY > 0) {
 			myY--;
-		} else if (randomized == 1) {
+		} else if ((randomized == 1 || randomized == 7) && myX < 400) {
 			myX++;
-		} else if (randomized == 2) {
+		} else if ((randomized == 2 || randomized == 8) && myY < 400) {
 			myY++;
-		} else if (randomized == 3) {
+		} else if ((randomized == 3 || randomized == 9) && myX > 0) {
 			myX--;
 		} else {
-			if (myX > mouseX && randomized == 4) {
+			if (myX > foodX && randomized == 4 && poison == false) {
 				myX--;
-			} else if (myX < mouseX && randomized == 4) {
+			} else if (myX < foodX && randomized == 4 && poison == false) {
 				myX++;
-			} else if (myY > mouseY && randomized == 5) {
+			} else if (myY > foodY && randomized == 5 && poison == false) {
 				myY--;
-			} else if (myY < mouseY && randomized == 5) {
+			} else if (myY < foodY && randomized == 5 && poison == false) {
 				myY++;
-			}
+			} else if (myX > foodX && randomized == 4 && poison == true && myX < 400) {
+				myX++;
+			} else if (myX < foodX && randomized == 4 && poison == true && myX > 0) {
+				myX--;
+			} else if (myY > foodY && randomized == 5 && poison == true && myY < 400) {
+				myY++;
+			} else if (myY < foodY && randomized == 5 && poison == true && myY > 0) {
+				myY--;
+			} 
 		}
 	}
 }    
