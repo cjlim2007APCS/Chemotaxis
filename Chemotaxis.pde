@@ -8,7 +8,7 @@ void setup()
 {     
 	//intialized bacteria array
 	 size(400,400);
-	 colony = new Bacteria[1000];
+	 colony = new Bacteria[350];
 	 for (int i = 0; i<colony.length; i++) {
 		colony[i] = new Bacteria();
 	}
